@@ -1,0 +1,9 @@
+import twilio from "twilio";
+const client = twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_TOKEN!);
+export async function sendWhatsAppMessage(toE164: string, body: string) {
+  return client.messages.create({
+    from: process.env.TWILIO_WHATSAPP_FROM!,
+    to: `whatsapp:${toE164}`,
+    body
+  });
+}
