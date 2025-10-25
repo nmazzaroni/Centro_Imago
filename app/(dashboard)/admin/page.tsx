@@ -7,13 +7,24 @@ import { redirect } from "next/navigation";
 export default async function Admin() {
   const gate = await requireRole(["admin"]);
   if (!gate.allowed) redirect("/");
+
   const supabase = supabaseServer();
-  const { data: pros } = await supabase.from("profiles").select("*").eq("role","profesional");
+  const { data: pros, error } = await supabase
+    .from("profiles")
+    .select("id, full_name, specialty") // ✅ especificado
+    .eq("role", "profesional");
+
   return (
     <main className="pb-20">
-      <DashboardHeader title="Panel Admin" subtitle="Alta de profesionales, etiquetas y novedades" />
+      <DashboardHeader
+        title="Panel Admin"
+        subtitle="Alta de profesionales, etiquetas y novedades"
+      />
       <div className="space-y-2">
-        <h2 className="font-semibold">Profesionales ({pros?.length ?? 0})</h2>
+        <h2 className="font-semibold">
+          Profesionales ({pros?.length ?? 0})
+        </h2>
+        {/* Podés mapear `pros` acá si querés mostrar nombres o especialidades */}
       </div>
       <NavBar role="admin" />
     </main>
